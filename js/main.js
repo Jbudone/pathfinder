@@ -63,7 +63,6 @@ var startEventHandlers = function(){
 		if (mouse.which == 0) return; // FIXME: only left mouse
 		if (pathfinder) {
 			pathfinder.cancel();
-			pathfinder = null;
 		}
 
 		var qLen = 0.25,

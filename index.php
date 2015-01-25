@@ -12,6 +12,7 @@
 	 *  - test Firefox
 	 *  - documentation
 	 *  - git & website
+	 *  - README
 	 **/
 ?>
 <head>

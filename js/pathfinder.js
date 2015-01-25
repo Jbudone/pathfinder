@@ -57,6 +57,7 @@ var Pathfinder = function(grid, scheme, _settings){
 	this.iterations = 0;
 
 	this.initialize = function(){
+		scheme.initialize();
 		var start = new Tile(grid.start, null, 0);
 		this.tiles[grid.hashTile(grid.start.x, grid.start.y)] = start;
 		this.openTiles.push(start);
@@ -87,6 +88,7 @@ var Pathfinder = function(grid, scheme, _settings){
 
 var Pathfind_BFS = function(grid){
 
+	this.initialize = function(){};
 	this.iterate = function(){
 		++this.iterations;
 		var tile = this.openTiles.shift(),
@@ -148,6 +150,7 @@ var Pathfind_BFS = function(grid){
 
 var Pathfind_DFS = function(grid){
 
+	this.initialize = function(){};
 	this.iterate = function(){
 		++this.iterations;
 		var tile = this.openTiles.pop(),
@@ -209,6 +212,10 @@ var Pathfind_DFS = function(grid){
 var Pathfind_ID = function(grid){
 
 	var d=0;
+	this.initialize = function(){
+		d = 0;
+	};
+
 	this.iterate = function(){
 		++this.iterations;
 		var tile = null,
