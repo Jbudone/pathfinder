@@ -1,0 +1,114 @@
+
+html, body {
+	margin: 0;
+}
+
+
+#options {
+	position: fixed;
+	right: 50px;
+	top: 10px;
+	background-color: rgba(0, 0, 0, 0.6);
+	border-radius: 8px;
+	box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+	padding: 10px;
+	overflow-y: hidden;
+}
+
+#options.hide {
+	height: 10px;
+}
+
+
+.section {
+	border: 1px solid #404040;
+	background: rgba(0, 0, 0, 0.3);
+	color: #FFFFFF;
+	margin-top: 4px;
+	border-radius: 8px;
+	padding: 8px;
+	font-family: georgia;
+}
+
+.section-title {
+	font-weight: bold;
+	text-align: center;
+	width: 100%;
+	display: block;
+}
+
+.button {
+	width: 10px;
+	height: 10px;
+	border-radius: 8px;
+	background: #0D0;
+	display: block;
+	float: left;
+	margin-right: 5px;
+	margin-top: 4px;
+	border: #000 thin solid;
+}
+
+
+#layout-fixed-number {
+	width: 60px;
+}
+
+#obstacle-fixed-number {
+	width: 40px;
+}
+
+#hide {
+	margin-bottom: 10px;
+	display: block;
+	width: 100%;
+	text-align: right;
+	color: #EEE;
+}
+
+#hide:hover {
+	color: #FFF;
+}
+
+.failed-path {
+	color: #F00;
+}
+
+
+.hidden {
+	display: none;
+}
+
+#algorithm {
+	padding-bottom: 44px;
+}
+
+.alg_button {
+	border: none;
+	background: rgba(255, 255, 255, 0.7);
+	border-radius: 5px;
+	font-size: 90%;
+	cursor: pointer;
+	padding: 2px 8px;
+	margin: 0 2%;
+	width: 22%;
+	display: block;
+	float: left;
+	text-align: center;
+	text-decoration: none;
+	color: #000;
+	font-family: georgia;
+}
+
+.alg_button:hover {
+	background: rgba(255, 255, 255, 0.9);
+}
+
+.alg-option {
+	text-decoration: none;
+	color: #FFF;
+}
+
+.alg-option:hover {
+	font-weight: bold;
+}
