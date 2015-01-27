@@ -577,12 +577,18 @@ var setupOptions = function(){
 	});
 	
 
+
+	setupPathfind({
+		title: "A* Search",
+		scheme: Pathfind_A
+	});
 };
 
 
 $(document).ready(function(){
-	setupOptions();
 	startup();
+	setupOptions();
 	startEventHandlers();
 	update();
+
 });
