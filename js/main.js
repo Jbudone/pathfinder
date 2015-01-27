@@ -62,7 +62,10 @@ var startEventHandlers = function(){
 
 	var triggerGrid = function(mouse){
 
-		if (mouse.which == 0) return; // FIXME: only left mouse
+		// Chrome: uses mouse.which
+		// FF: uses mouse.buttons
+		if (mouse.buttons === 0 ||
+			(mouse.buttons === undefined && mouse.which == 0)) return; // FIXME: only left mouse
 		if (pathfinder) {
 			pathfinder.cancel();
 		}
