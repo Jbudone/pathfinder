@@ -70,6 +70,7 @@
 				<a href="#" class="alg-option" id="algorithm-iterative"><span class="button"></span><span class="option-text">Iterative Deepening</span></a><br/>
 				<a href="#" class="alg-option" id="algorithm-A"><span class="button"></span><span class="option-text">A*</span></a><br/>
 				<a href="#" class="alg-option" id="algorithm-greedy"><span class="button"></span><span class="option-text">Greedy Seach</span></a><br/>
+				<a href="#" class="alg-option" id="algorithm-hillclimbing"><span class="button"></span><span class="option-text">Hill Climbing Seach</span></a><br/>
 			</div>
 		</div>
 		<hr/>

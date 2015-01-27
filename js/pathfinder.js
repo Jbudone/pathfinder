@@ -469,3 +469,80 @@ var Pathfind_Greedy = function(grid){
 	};
 
 };
+
+
+var Pathfind_Hillclimbing = function(grid){
+
+	var nextTile = null;
+
+	var heuristic = function(tile){
+		return Math.abs(tile.cell.x - grid.goal.x) + Math.abs(tile.cell.y - grid.goal.y);
+	};
+
+	this.initialize = function(){
+		var start = this.openTiles[0],
+			cost = heuristic(start);
+		nextTile = start;
+		nextTile.cost = cost;
+	};
+
+	this.iterate = function(){
+		++this.iterations;
+		var tile = nextTile,
+			neighbours = [],
+			cheapestNeighbour = null,
+			cheapestNeighbourCost = tile.cost;
+
+		this.onNewIteration(tile.cell);
+
+		if (tile.cell.nw) neighbours.push({ cell: tile.cell.nw, dir: DIR_NW });
+		if (tile.cell.n)  neighbours.push({ cell: tile.cell.n,  dir: DIR_N });
+		if (tile.cell.ne) neighbours.push({ cell: tile.cell.ne, dir: DIR_NE });
+		if (tile.cell.sw) neighbours.push({ cell: tile.cell.sw, dir: DIR_SW });
+		if (tile.cell.s)  neighbours.push({ cell: tile.cell.s,  dir: DIR_S });
+		if (tile.cell.se) neighbours.push({ cell: tile.cell.se, dir: DIR_SE });
+
+		for (var i=0; i<neighbours.length; ++i) {
+			var neighbour = neighbours[i],
+				hash = grid.hashTile(neighbour.cell.x, neighbour.cell.y);
+
+			// Is this a wall?
+			if (neighbour.cell.state === STATE_HIGHLIGHTED) {
+				continue;
+			}
+
+			// Already searched this tile
+			if (this.tiles.hasOwnProperty(hash)) {
+				continue;
+			}
+			
+			var newTile = new Tile(neighbour.cell, neighbour.dir),
+				cost = heuristic(newTile);
+			newTile.cost = cost;
+
+			// Is this the end goal?
+			if (neighbour.cell == grid.goal) {
+				var path = this.buildPath(newTile);
+				this.onSolvedPath(path, this.iterations, _.size(this.tiles));
+				return false;
+			}
+
+			// Add this to our open tiles
+			this.tiles[hash] = newTile;
+			if (cost <= cheapestNeighbourCost) {
+				cheapestNeighbour = newTile;
+				cheapestNeighbourCost = cost;
+			}
+		}
+
+		if (!cheapestNeighbour) {
+			this.onFailedPath(this.iterations, _.size(this.tiles));
+			return false;
+		}
+
+		nextTile = cheapestNeighbour;
+
+		return true;
+	};
+
+};

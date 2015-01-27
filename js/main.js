@@ -450,6 +450,7 @@ var setupOptions = function(){
 			totIts        = 0,
 			totNodes      = 0,
 			finishedTests = 0,
+			solvedTests   = 0,
 			iterTime      = Settings.pathfinding.iterationTime,
 			startTime     = (new Date()).getTime();
 
@@ -471,6 +472,7 @@ var setupOptions = function(){
 					avgIts = totIts / finishedTests;
 					totNodes += nodes;
 					avgNodes = totNodes / finishedTests;
+					++solvedTests;
 
 					if (finishedTests < nTests) {
 						nextTest();
@@ -499,7 +501,7 @@ var setupOptions = function(){
 				pathfinder.solve();
 			},
 			reportTotals = function(){
-				$('#result-tests').text(finishedTests);
+				$('#result-tests').text(solvedTests + '/' + finishedTests);
 				$('#result-avg-iterations').text(parseInt(avgIts));
 				$('#result-avg-nodes').text(parseInt(avgNodes));
 			},
@@ -558,6 +560,15 @@ var setupOptions = function(){
 		setupPathfind({
 			title: "Greedy Search",
 			scheme: Pathfind_Greedy
+		});
+		return false;
+	});
+
+	$('#algorithm-hillclimbing').click(function(){
+		resetPathfind();
+		setupPathfind({
+			title: "Hill Climbing Search",
+			scheme: Pathfind_Hillclimbing
 		});
 		return false;
 	});
