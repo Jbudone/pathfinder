@@ -86,7 +86,7 @@
 			<hr/>
 			<div class="details">
 				<a href="#" class="alg_button" id="start">Start Search</a>
-				<a href="#" class="alg_button" id="recreate">Randomize Grid</a>
+				<a href="#" class="alg_button" id="recreate">New Grid</a>
 				<a href="#" class="alg_button" id="clear">Clear Walls</a>
 			</div>
 		</div>

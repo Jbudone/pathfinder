@@ -13,6 +13,7 @@ html, body {
 	box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
 	padding: 10px;
 	overflow-y: hidden;
+	width: 260px;
 }
 
 #options.hide {

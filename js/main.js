@@ -465,11 +465,19 @@ var setupOptions = function(){
 
 	$('#algorithm-A').click(function(){
 		resetPathfind();
+		setupPathfind({
+			title: "A* Search",
+			scheme: Pathfind_A
+		});
 		return false;
 	});
 
 	$('#algorithm-greedy').click(function(){
 		resetPathfind();
+		setupPathfind({
+			title: "Greedy Search",
+			scheme: Pathfind_Greedy
+		});
 		return false;
 	});
 	

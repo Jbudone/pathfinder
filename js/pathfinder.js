@@ -57,10 +57,10 @@ var Pathfinder = function(grid, scheme, _settings){
 	this.iterations = 0;
 
 	this.initialize = function(){
-		scheme.initialize();
 		var start = new Tile(grid.start, null, 0);
 		this.tiles[grid.hashTile(grid.start.x, grid.start.y)] = start;
 		this.openTiles.push(start);
+		scheme.initialize.bind(this)();
 	};
 
 	this.buildPath = function(fromTile){
@@ -287,3 +287,185 @@ var Pathfind_ID = function(grid){
 
 };
 
+
+
+var Pathfind_A = function(grid){
+
+	// Hashtable of open paths
+	// Key: heuristic cost
+	// Value: array of paths with the given heuristic
+	var paths = {};
+
+	var heuristic = function(tile){
+		return Math.abs(tile.cell.x - grid.goal.x) + Math.abs(tile.cell.y - grid.goal.y) + tile.cost;
+	};
+
+	var shiftCheapestPath = function(){
+
+		// NOTE: Javascript object hash is done in such a way that if we iterate through the object, it will
+		//		be done in order of the key integer value
+		for (var cost in paths) {
+			var cheapestPaths = paths[cost],
+				path = cheapestPaths[0];
+			cheapestPaths.splice(0, 1);
+			if (cheapestPaths.length == 0) {
+				delete paths[cost];
+			}
+			return path;
+		}
+
+		return null;
+	};
+
+	this.initialize = function(){
+		paths = {};
+		
+		var start = this.openTiles[0],
+			cost = heuristic(start);
+		paths[cost] = [start];
+	};
+
+	this.iterate = function(){
+		++this.iterations;
+		var tile = shiftCheapestPath(),
+			neighbours = [];
+
+		this.onNewIteration(tile.cell);
+
+		if (tile.cell.nw) neighbours.push({ cell: tile.cell.nw, dir: DIR_NW });
+		if (tile.cell.n)  neighbours.push({ cell: tile.cell.n,  dir: DIR_N });
+		if (tile.cell.ne) neighbours.push({ cell: tile.cell.ne, dir: DIR_NE });
+		if (tile.cell.sw) neighbours.push({ cell: tile.cell.sw, dir: DIR_SW });
+		if (tile.cell.s)  neighbours.push({ cell: tile.cell.s,  dir: DIR_S });
+		if (tile.cell.se) neighbours.push({ cell: tile.cell.se, dir: DIR_SE });
+
+		for (var i=0; i<neighbours.length; ++i) {
+			var neighbour = neighbours[i],
+				hash = grid.hashTile(neighbour.cell.x, neighbour.cell.y);
+
+			// Is this a wall?
+			if (neighbour.cell.state === STATE_HIGHLIGHTED) {
+				continue;
+			}
+
+			// Already searched this tile
+			if (this.tiles.hasOwnProperty(hash)) {
+				continue;
+			}
+			
+			var newTile = new Tile(neighbour.cell, neighbour.dir, tile.cost + 1),
+				cost = heuristic(newTile);
+
+			// Is this the end goal?
+			if (neighbour.cell == grid.goal) {
+				var path = this.buildPath(newTile);
+				this.onSolvedPath(path, this.iterations);
+				return false;
+			}
+
+			// Add this to our open tiles
+			this.tiles[hash] = newTile;
+			if (!paths.hasOwnProperty(cost)) paths[cost] = [];
+			paths[cost].push(newTile);
+		}
+
+		if (_.isEmpty(paths)) {
+			this.onFailedPath(this.iterations);
+			return false;
+		}
+
+		return true;
+	};
+
+};
+
+
+var Pathfind_Greedy = function(grid){
+
+	// Hashtable of open paths
+	// Key: heuristic cost
+	// Value: array of paths with the given heuristic
+	var paths = {};
+
+	var heuristic = function(tile){
+		return Math.abs(tile.cell.x - grid.goal.x) + Math.abs(tile.cell.y - grid.goal.y);
+	};
+
+	var shiftCheapestPath = function(){
+
+		// NOTE: Javascript object hash is done in such a way that if we iterate through the object, it will
+		//		be done in order of the key integer value
+		for (var cost in paths) {
+			var cheapestPaths = paths[cost],
+				path = cheapestPaths[0];
+			cheapestPaths.splice(0, 1);
+			if (cheapestPaths.length == 0) {
+				delete paths[cost];
+			}
+			return path;
+		}
+
+		return null;
+	};
+
+	this.initialize = function(){
+		paths = {};
+		
+		var start = this.openTiles[0],
+			cost = heuristic(start);
+		paths[cost] = [start];
+	};
+
+	this.iterate = function(){
+		++this.iterations;
+		var tile = shiftCheapestPath(),
+			neighbours = [];
+
+		this.onNewIteration(tile.cell);
+
+		if (tile.cell.nw) neighbours.push({ cell: tile.cell.nw, dir: DIR_NW });
+		if (tile.cell.n)  neighbours.push({ cell: tile.cell.n,  dir: DIR_N });
+		if (tile.cell.ne) neighbours.push({ cell: tile.cell.ne, dir: DIR_NE });
+		if (tile.cell.sw) neighbours.push({ cell: tile.cell.sw, dir: DIR_SW });
+		if (tile.cell.s)  neighbours.push({ cell: tile.cell.s,  dir: DIR_S });
+		if (tile.cell.se) neighbours.push({ cell: tile.cell.se, dir: DIR_SE });
+
+		for (var i=0; i<neighbours.length; ++i) {
+			var neighbour = neighbours[i],
+				hash = grid.hashTile(neighbour.cell.x, neighbour.cell.y);
+
+			// Is this a wall?
+			if (neighbour.cell.state === STATE_HIGHLIGHTED) {
+				continue;
+			}
+
+			// Already searched this tile
+			if (this.tiles.hasOwnProperty(hash)) {
+				continue;
+			}
+			
+			var newTile = new Tile(neighbour.cell, neighbour.dir, tile.cost + 1),
+				cost = heuristic(newTile);
+
+			// Is this the end goal?
+			if (neighbour.cell == grid.goal) {
+				var path = this.buildPath(newTile);
+				this.onSolvedPath(path, this.iterations);
+				return false;
+			}
+
+			// Add this to our open tiles
+			this.tiles[hash] = newTile;
+			if (!paths.hasOwnProperty(cost)) paths[cost] = [];
+			paths[cost].push(newTile);
+		}
+
+		if (_.isEmpty(paths)) {
+			this.onFailedPath(this.iterations);
+			return false;
+		}
+
+		return true;
+	};
+
+};
