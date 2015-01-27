@@ -2,6 +2,7 @@
 var Settings = {
 
 		updateTime: 20,
+		doNotRedraw: false,
 
 		grid: {
 			width: 45,
@@ -12,7 +13,8 @@ var Settings = {
 			scale: 36
 		},
 		pathfinding: {
-			iterationTime: 10
+			iterationTime: 10,
+			hideTests: false   // Don't draw tests/iterations to canvas (speeds up testing)
 		}
 
 },	grid = null,
@@ -164,7 +166,7 @@ var startEventHandlers = function(){
 
 var update = function(){
 
-	if (changed) {
+	if (changed && !Settings.doNotRedraw) {
 		changed = canvas.redraw();
 	}
 
@@ -373,7 +375,7 @@ var setupOptions = function(){
 			}
 		};
 
-		pathfinder.onSolvedPath = function(path, iterations){
+		pathfinder.onSolvedPath = function(path, iterations, nodes){
 			console.log("Solved path in "+iterations+" iterations");
 
 			for (var i=0; i<path.length; ++i) {
@@ -384,14 +386,17 @@ var setupOptions = function(){
 			}
 
 			$('#result-iterations').text(iterations);
+			$('#result-nodes').text(nodes);
 			$('#result-path').removeClass('failed-path').text(path.length);
+
 			changed = true;
 		};
 
-		pathfinder.onFailedPath = function(iterations){
+		pathfinder.onFailedPath = function(iterations, nodes){
 			console.log("Failed path in "+iterations+" iterations");
 
 			$('#result-iterations').text(iterations);
+			$('#result-nodes').text(nodes);
 			$('#result-path').addClass('failed-path').text('Failed');
 		};
 
@@ -401,15 +406,7 @@ var setupOptions = function(){
 		$('#result-title').text(properties.title);
 
 	};
-
-
-	$('#start').click(function(){
-		pathfinder.cancel();
-		pathfinder.solve();
-		return false;
-	});
-
-	$('#recreate').click(function(){
+	var recreate = function(){
 		resetPathfind();
 
 		grid = new Grid(Settings.grid);
@@ -420,7 +417,17 @@ var setupOptions = function(){
 
 		setupPathfind(pathProperties);
 		changed = true;
+	};
 
+
+	$('#start').click(function(){
+		pathfinder.cancel();
+		pathfinder.solve();
+		return false;
+	});
+
+	$('#recreate').click(function(){
+		recreate();
 		return false;
 	});
 
@@ -432,6 +439,80 @@ var setupOptions = function(){
 			if (tile.state == STATE_HIGHLIGHTED) tile.state = 0;
 		}
 		changed = true;
+
+		return false;
+	});
+
+	$('#begin-test').click(function(){
+		var nTests        = parseInt($('#test-number').val()),
+			avgIts        = 0,
+			avgNodes      = 0,
+			totIts        = 0,
+			totNodes      = 0,
+			finishedTests = 0,
+			iterTime      = Settings.pathfinding.iterationTime,
+			startTime     = (new Date()).getTime();
+
+		Settings.pathfinding.iterationTime = 0;
+		Settings.doNotRedraw = Settings.pathfinding.hideTests;
+		var onCurTestSolved = null,
+			onCurTestFailed = null,
+			nextTest = function(){
+
+				recreate();
+				onCurTestSolved = pathfinder.onSolvedPath;
+				onCurTestFailed = pathfinder.onFailedPath;
+				reportTotals();
+
+				pathfinder.onSolvedPath = function(path, iterations, nodes){
+					onCurTestSolved(path, iterations);
+					++finishedTests;
+					totIts += iterations;
+					avgIts = totIts / finishedTests;
+					totNodes += nodes;
+					avgNodes = totNodes / finishedTests;
+
+					if (finishedTests < nTests) {
+						nextTest();
+					} else {
+						reportTotals();
+						finished();
+					}
+				};
+
+				pathfinder.onFailedPath = function(iterations, nodes){
+					onCurTestFailed(iterations);
+					++finishedTests;
+					totIts += iterations;
+					avgIts = totIts / finishedTests;
+					totNodes += nodes;
+					avgNodes = totNodes / finishedTests;
+
+					if (finishedTests < nTests) {
+						nextTest();
+					} else {
+						reportTotals();
+						finished();
+					}
+				};
+
+				pathfinder.solve();
+			},
+			reportTotals = function(){
+				$('#result-tests').text(finishedTests);
+				$('#result-avg-iterations').text(parseInt(avgIts));
+				$('#result-avg-nodes').text(parseInt(avgNodes));
+			},
+			finished = function(){
+				Settings.pathfinding.iterationTime = iterTime;
+				Settings.doNotRedraw = false;
+				var finishedTime = (new Date()).getTime(),
+					totalTime = Math.round((finishedTime - startTime)/1000);
+				$('#result-total-time').text(totalTime);
+			};
+
+		reportTotals();
+		nextTest();
 
 		return false;
 	});
@@ -481,6 +562,7 @@ var setupOptions = function(){
 		return false;
 	});
 	
+
 };
 
 

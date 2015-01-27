@@ -128,7 +128,7 @@ var Pathfind_BFS = function(grid){
 			// Is this the end goal?
 			if (neighbour.cell == grid.goal) {
 				var path = this.buildPath(newTile);
-				this.onSolvedPath(path, this.iterations);
+				this.onSolvedPath(path, this.iterations, _.size(this.tiles));
 				return false;
 			}
 
@@ -138,7 +138,7 @@ var Pathfind_BFS = function(grid){
 		}
 
 		if (!this.openTiles.length) {
-			this.onFailedPath(this.iterations);
+			this.onFailedPath(this.iterations, _.size(this.tiles));
 			return false;
 		}
 
@@ -190,7 +190,7 @@ var Pathfind_DFS = function(grid){
 			// Is this the end goal?
 			if (neighbour.cell == grid.goal) {
 				var path = this.buildPath(newTile);
-				this.onSolvedPath(path, this.iterations);
+				this.onSolvedPath(path, this.iterations, _.size(this.tiles));
 				return false;
 			}
 
@@ -200,7 +200,7 @@ var Pathfind_DFS = function(grid){
 		}
 
 		if (!this.openTiles.length) {
-			this.onFailedPath(this.iterations);
+			this.onFailedPath(this.iterations, _.size(this.tiles));
 			return false;
 		}
 
@@ -268,7 +268,7 @@ var Pathfind_ID = function(grid){
 			// Is this the end goal?
 			if (neighbour.cell == grid.goal) {
 				var path = this.buildPath(newTile);
-				this.onSolvedPath(path, this.iterations);
+				this.onSolvedPath(path, this.iterations, _.size(this.tiles));
 				return false;
 			}
 
@@ -278,7 +278,7 @@ var Pathfind_ID = function(grid){
 		}
 
 		if (!this.openTiles.length) {
-			this.onFailedPath(this.iterations);
+			this.onFailedPath(this.iterations, _.size(this.tiles));
 			return false;
 		}
 
@@ -359,7 +359,7 @@ var Pathfind_A = function(grid){
 			// Is this the end goal?
 			if (neighbour.cell == grid.goal) {
 				var path = this.buildPath(newTile);
-				this.onSolvedPath(path, this.iterations);
+				this.onSolvedPath(path, this.iterations, _.size(this.tiles));
 				return false;
 			}
 
@@ -370,7 +370,7 @@ var Pathfind_A = function(grid){
 		}
 
 		if (_.isEmpty(paths)) {
-			this.onFailedPath(this.iterations);
+			this.onFailedPath(this.iterations, _.size(this.tiles));
 			return false;
 		}
 
@@ -450,7 +450,7 @@ var Pathfind_Greedy = function(grid){
 			// Is this the end goal?
 			if (neighbour.cell == grid.goal) {
 				var path = this.buildPath(newTile);
-				this.onSolvedPath(path, this.iterations);
+				this.onSolvedPath(path, this.iterations, _.size(this.tiles));
 				return false;
 			}
 
@@ -461,7 +461,7 @@ var Pathfind_Greedy = function(grid){
 		}
 
 		if (_.isEmpty(paths)) {
-			this.onFailedPath(this.iterations);
+			this.onFailedPath(this.iterations, _.size(this.tiles));
 			return false;
 		}
 

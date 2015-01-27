@@ -7,12 +7,12 @@
 
 	/* TODO
 	 *
-	 *	- automated test/reporting
-	 *	- algorithms: A*, Greedy, Hill Climbing
+	 *	- algorithms: Hill Climbing
 	 *  - test Firefox
 	 *  - documentation
 	 *  - git & website
 	 *  - README
+	 *  - Bug: interrupting tests
 	 **/
 ?>
 <head>
@@ -47,7 +47,7 @@
 			<span class="section-title">Layout</span>
 			<div class="details">
 				<input type="radio" name="layout" id="layout-fullscreen" checked /><label for="layout-fullscreen" class="option-text">Fullscreen</label><br/>
-				<input type="radio" name="layout" id="layout-fixed" /><label for="layout-fixed" class="option-text">Fixed: </label><input type="number" id="layout-fixed-number" min="10" max="10000" value="1000" /><span class="option-text"> hexagons</span><br/>
+				<input type="radio" name="layout" id="layout-fixed" /><label for="layout-fixed" class="option-text">Fixed: </label><input type="number" id="layout-fixed-number" min="10" max="10000" value="1000" class="number" /><span class="option-text"> hexagons</span><br/>
 			</div>
 		</div>
 		<div class="section">
@@ -58,7 +58,7 @@
 				<input type="radio" name="obstacle" id="obstacle-moderate" checked /><label for="obstacle-moderate" class="option-text">Moderate</label><br/>
 				<input type="radio" name="obstacle" id="obstacle-lots" /><label for="obstacle-lots" class="option-text">Lots</label><br/>
 				<input type="radio" name="obstacle" id="obstacle-ridiculous" /><label for="obstacle-ridiculous" class="option-text">Ridiculous</label><br/>
-				<input type="radio" name="obstacle" id="obstacle-fixed" /><label for="obstacle-fixed" class="option-text">Fixed: </label><input type="number" id="obstacle-fixed-number" min="0" max="80" value="0" /><span class="option-text">% obstacles</span><br/>
+				<input type="radio" name="obstacle" id="obstacle-fixed" /><label for="obstacle-fixed" class="option-text">Fixed: </label><input type="number" id="obstacle-fixed-number" min="0" max="80" value="0" class="number" /><span class="option-text">% obstacles</span><br/>
 			</div>
 		</div>
 		<div class="section">
@@ -76,12 +76,15 @@
 		<div id="algorithm" class="section hidden">
 			<span id="result-title" class="section-title"></span>
 			<div class="details">
-				<span class="option-text">Iterations: </span><span class="option-value" id="result-iterations"></span><br/>
-				<span class="option-text">Path Length: </span><span class="option-value" id="result-path"></span><br/>
-				<br/>
-				<a href="#" id="algorithm-bfs" class="button"></a><span class="option-text">Automate </span><input type="number" id="test-number" min="1" max="1000" value="10" /><span class="option-text">tests</span><br/>
-				<span class="option-text">Tests: </span><span class="option-value" id="result-tests"></span><br/>
-				<span class="option-text">Average Iterations: </span><span class="option-value" id="result-avg-iterations"></span><br/>
+				<span class="option-text">Iterations: </span><span class="option-value" id="result-iterations">0</span><br/>
+				<span class="option-text">Nodes Searched: </span><span class="option-value" id="result-nodes">0</span><br/>
+				<span class="option-text">Path Length: </span><span class="option-value" id="result-path">0</span><br/>
+				<hr/>
+				<a href="#" id="begin-test" class="button"></a><span class="option-text">Automate </span><input type="number" id="test-number" min="1" max="1000" value="10" class="number" /><span class="option-text">tests</span><br/>
+				<span class="option-text">Tests: </span><span class="option-value" id="result-tests">0</span><br/>
+				<span class="option-text">Average Iterations: </span><span class="option-value" id="result-avg-iterations">0</span><br/>
+				<span class="option-text">Average Nodes Searched: </span><span class="option-value" id="result-avg-nodes">0</span><br/>
+				<span class="option-text">Total Running Time: </span><span class="option-value" id="result-total-time">0</span> seconds<br/>
 			</div>
 			<hr/>
 			<div class="details">

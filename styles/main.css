@@ -50,6 +50,9 @@ html, body {
 	border: #000 thin solid;
 }
 
+.button:hover {
+	background: #0F0;
+}
 
 #layout-fixed-number {
 	width: 60px;
@@ -112,4 +115,18 @@ html, body {
 
 .alg-option:hover {
 	font-weight: bold;
+}
+
+#test-number {
+	width: 50px;
+}
+
+.number {
+	background: rgba(255, 255, 255, 0.2);
+	border: none;
+	color: #FFF;
+	font-weight: bold;
+	font-family: georgia;
+	font-size: 16px;
+	text-align: center;
 }
