@@ -53,6 +53,24 @@ var shutdown = function(){
 	}
 };
 
+var pathProperties = null,
+	resetPathfind = null,
+	setupPathfind = null,
+	recreate = function(){
+		resetPathfind();
+
+		delete grid;
+		grid = new Grid(Settings.grid);
+		Settings.canvas.width = Settings.grid.width * 0.75 * Settings.canvas.scale;
+		Settings.canvas.height = Settings.grid.height * 0.5 * Settings.canvas.scale;
+
+		delete canvas;
+		canvas = new Canvas(grid, Settings.canvas);
+
+		setupPathfind(pathProperties);
+		changed = true;
+};
+
 var startEventHandlers = function(){
 
 	var hovering = null,
@@ -201,8 +219,7 @@ var setupOptions = function(){
 	var updateLayout = function(){
 
 		changed = false;
-		shutdown();
-		startup();
+		recreate();
 		changed = true;
 	};
 
@@ -342,7 +359,7 @@ var setupOptions = function(){
 	// Pathfinding
 	//
 
-	var resetPathfind = function(){
+	resetPathfind = function(){
 		if (pathfinder) {
 			pathfinder.cancel();
 		}
@@ -356,8 +373,7 @@ var setupOptions = function(){
 
 	};
 
-	var pathProperties = null;
-	var setupPathfind = function(properties){
+	setupPathfind = function(properties){
 
 		pathProperties = properties;
 		pathfinder = new Pathfinder(grid, properties.scheme, Settings.pathfinding);
@@ -408,18 +424,6 @@ var setupOptions = function(){
 		$('#algorithm').removeClass('hidden');
 		$('#result-title').text(properties.title);
 
-	};
-	var recreate = function(){
-		resetPathfind();
-
-		grid = new Grid(Settings.grid);
-		Settings.canvas.width = Settings.grid.width * 0.75 * Settings.canvas.scale;
-		Settings.canvas.height = Settings.grid.height * 0.5 * Settings.canvas.scale;
-
-		canvas = new Canvas(grid, Settings.canvas);
-
-		setupPathfind(pathProperties);
-		changed = true;
 	};
 
 
